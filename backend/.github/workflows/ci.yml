@@ -1,0 +1,112 @@
+name: Backend CI
+
+on:
+  push:
+    branches: [main, develop]
+    paths:
+      - 'backend/**'
+  pull_request:
+    branches: [main, develop]
+    paths:
+      - 'backend/**'
+
+defaults:
+  run:
+    working-directory: .
+
+jobs:
+  backend-ci:
+    name: Backend CI — Lint · Type-check · Test · Build
+    runs-on: ubuntu-latest
+
+    services:
+      mongodb:
+        image: mongo:7.0
+        ports:
+          - 27017:27017
+        env:
+          MONGO_INITDB_ROOT_USERNAME: admin
+          MONGO_INITDB_ROOT_PASSWORD: password
+        options: >-
+          --health-cmd "mongosh --eval 'db.adminCommand(\"ping\")'"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+      redis:
+        image: redis:7.2-alpine
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    env:
+      NODE_ENV: test
+      PORT: 3001
+      FRONTEND_URL: http://localhost:3000
+      JWT_ACCESS_SECRET: ci-access-secret
+      JWT_ACCESS_EXPIRES: 15m
+      JWT_REFRESH_SECRET: ci-refresh-secret
+      JWT_REFRESH_EXPIRES: 7d
+      MONGODB_URI: mongodb://admin:password@localhost:27017/ecommerce_test?authSource=admin
+      REDIS_HOST: localhost
+      REDIS_PORT: 6379
+      REDIS_PASSWORD: ''
+      CLOUDINARY_CLOUD_NAME: ci-cloud
+      CLOUDINARY_API_KEY: ci-key
+      CLOUDINARY_API_SECRET: ci-secret
+      SMTP_HOST: smtp.mailtrap.io
+      SMTP_PORT: 587
+      SMTP_USER: ci-user
+      SMTP_PASS: ci-pass
+      SMTP_FROM: ci@test.com
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: latest
+
+      - name: Get pnpm store directory
+        shell: bash
+        run: echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+        working-directory: backend
+
+      - name: Setup pnpm cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('backend/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+        working-directory: backend
+
+      - name: Lint
+        run: pnpm run lint
+        working-directory: backend
+
+      - name: Type check
+        run: pnpm run type-check
+        working-directory: backend
+
+      - name: Run tests
+        run: pnpm run test
+        working-directory: backend
+
+      - name: Build
+        run: pnpm run build
+        working-directory: backend

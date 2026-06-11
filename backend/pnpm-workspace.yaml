@@ -1,0 +1,7 @@
+allowBuilds:
+  '@nestjs/core': false
+  '@scarf/scarf': false
+  bcrypt: true
+  mongodb-memory-server: true
+  msgpackr-extract: true
+  unrs-resolver: false

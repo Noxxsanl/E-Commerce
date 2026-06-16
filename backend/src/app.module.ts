@@ -28,6 +28,8 @@ import { RolesGuard } from './common/guards/roles.guard';
 import { AddressesModule } from './modules/addresses/addresses.module';
 import { CategoriesModule } from './modules/categories/categories.module';
 import { ProductsModule } from './modules/products/products.module';
+import { WishlistModule } from './modules/wishlist/wishlist.module';
+import { CartModule } from './modules/cart/cart.module';
 
 @Module({
   imports: [
@@ -77,6 +79,8 @@ import { ProductsModule } from './modules/products/products.module';
     AddressesModule,
     CategoriesModule,
     ProductsModule,
+    WishlistModule,
+    CartModule,
   ],
   controllers: [AppController],
   providers: [

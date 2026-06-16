@@ -25,6 +25,12 @@ export class ProductVariantsRepository {
     return this.variantModel.findById(id).exec();
   }
 
+  async findByIds(
+    ids: (string | Types.ObjectId)[],
+  ): Promise<ProductVariantDocument[]> {
+    return this.variantModel.find({ _id: { $in: ids } }).exec();
+  }
+
   async create(data: Partial<ProductVariant>): Promise<ProductVariantDocument> {
     return this.variantModel.create(data);
   }

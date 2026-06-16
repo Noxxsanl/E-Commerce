@@ -3,6 +3,8 @@ import { HydratedDocument, Types } from 'mongoose';
 
 @Schema({ _id: true, timestamps: false })
 class CartItem {
+  _id!: Types.ObjectId;
+
   @Prop({ type: Types.ObjectId, ref: 'Product', required: true })
   productId!: Types.ObjectId;
 

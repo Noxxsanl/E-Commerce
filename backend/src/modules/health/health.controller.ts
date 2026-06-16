@@ -4,6 +4,7 @@ import { Connection, ConnectionStates } from 'mongoose';
 import { InjectRedis } from '../../cache/redis.provider';
 import Redis from 'ioredis';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Public } from '../../common/decorators/public.decorator';
 
 @ApiTags('System')
 @Controller('health')
@@ -13,6 +14,7 @@ export class HealthController {
     @InjectRedis() private readonly redis: Redis,
   ) {}
 
+  @Public()
   @Get()
   @ApiOperation({ summary: 'Health check — ping MongoDB + Redis' })
   @ApiResponse({ status: 200, description: 'All services are up' })

@@ -30,6 +30,7 @@ import { CategoriesModule } from './modules/categories/categories.module';
 import { ProductsModule } from './modules/products/products.module';
 import { WishlistModule } from './modules/wishlist/wishlist.module';
 import { CartModule } from './modules/cart/cart.module';
+import { CouponsModule } from './modules/coupons/coupons.module';
 
 @Module({
   imports: [
@@ -81,6 +82,7 @@ import { CartModule } from './modules/cart/cart.module';
     ProductsModule,
     WishlistModule,
     CartModule,
+    CouponsModule,
   ],
   controllers: [AppController],
   providers: [

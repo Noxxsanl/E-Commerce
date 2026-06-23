@@ -17,6 +17,12 @@ export class OrderItemsRepository {
     return this.orderItemModel.create(items, { session });
   }
 
+  async findById(
+    id: string | Types.ObjectId,
+  ): Promise<OrderItemDocument | null> {
+    return this.orderItemModel.findById(id).exec();
+  }
+
   async findByOrderId(
     orderId: string | Types.ObjectId,
   ): Promise<OrderItemDocument[]> {

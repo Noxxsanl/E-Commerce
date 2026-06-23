@@ -32,6 +32,7 @@ import { WishlistModule } from './modules/wishlist/wishlist.module';
 import { CartModule } from './modules/cart/cart.module';
 import { CouponsModule } from './modules/coupons/coupons.module';
 import { OrdersModule } from './modules/orders/orders.module';
+import { ReviewsModule } from './modules/reviews/reviews.module';
 
 @Module({
   imports: [
@@ -85,6 +86,7 @@ import { OrdersModule } from './modules/orders/orders.module';
     CartModule,
     CouponsModule,
     OrdersModule,
+    ReviewsModule,
   ],
   controllers: [AppController],
   providers: [

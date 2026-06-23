@@ -33,6 +33,6 @@ import { QUEUE_NAMES } from '../../common/constants/queue.constant';
     ProductsService,
     AnalyticsProcessor,
   ],
-  exports: [MongooseModule, ProductsRepository],
+  exports: [MongooseModule, ProductsRepository, ProductVariantsRepository],
 })
 export class ProductsModule {}

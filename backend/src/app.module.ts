@@ -33,6 +33,8 @@ import { CartModule } from './modules/cart/cart.module';
 import { CouponsModule } from './modules/coupons/coupons.module';
 import { OrdersModule } from './modules/orders/orders.module';
 import { ReviewsModule } from './modules/reviews/reviews.module';
+import { BannersModule } from './modules/banners/banners.module';
+import { NotificationsModule } from './modules/notifications/notifications.module';
 
 @Module({
   imports: [
@@ -87,6 +89,8 @@ import { ReviewsModule } from './modules/reviews/reviews.module';
     CouponsModule,
     OrdersModule,
     ReviewsModule,
+    BannersModule,
+    NotificationsModule,
   ],
   controllers: [AppController],
   providers: [

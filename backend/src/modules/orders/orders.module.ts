@@ -15,6 +15,7 @@ import { CouponsModule } from '../coupons/coupons.module';
 import { ProductsModule } from '../products/products.module';
 import { AuditLogsModule } from '../audit-logs/audit-logs.module';
 import { EmailModule } from '../email/email.module';
+import { NotificationsModule } from '../notifications/notifications.module';
 import { QUEUE_NAMES } from '../../common/constants/queue.constant';
 
 @Module({
@@ -33,6 +34,7 @@ import { QUEUE_NAMES } from '../../common/constants/queue.constant';
     ProductsModule,
     AuditLogsModule,
     EmailModule,
+    NotificationsModule,
   ],
   controllers: [OrdersController, OrdersAdminController],
   providers: [

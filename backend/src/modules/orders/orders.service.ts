@@ -1,4 +1,4 @@
-import { HttpStatus, Injectable, Logger } from '@nestjs/common';
+import { HttpStatus, Injectable, Logger, Optional } from '@nestjs/common';
 import { InjectConnection } from '@nestjs/mongoose';
 import { InjectQueue } from '@nestjs/bullmq';
 import { Connection, Types } from 'mongoose';
@@ -20,6 +20,7 @@ import { ProductsRepository } from '../products/products.repository';
 import { ProductVariantsRepository } from '../products/product-variants.repository';
 import { AuditLogsRepository } from '../audit-logs/audit-logs.repository';
 import { EmailService } from '../email/email.service';
+import { NotificationsGateway } from '../notifications/notifications.gateway';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderStatusDto } from './dto/update-order-status.dto';
 import { QueryOrderDto, QueryAdminOrderDto } from './dto/query-order.dto';
@@ -67,6 +68,7 @@ export class OrdersService {
     private readonly productVariantsRepository: ProductVariantsRepository,
     private readonly auditLogsRepository: AuditLogsRepository,
     private readonly emailService: EmailService,
+    @Optional() private readonly notificationsGateway: NotificationsGateway,
   ) {}
 
   // ==================== USER ENDPOINTS ====================
@@ -319,7 +321,12 @@ export class OrdersService {
         this.logger.warn('[OrdersService] Notification queue unavailable', err),
       );
 
-    // TODO(T-13): emit socket `order:new` to admin room
+    this.notificationsGateway?.emitToAdmin('order:new', {
+      orderId: createdOrder._id.toString(),
+      orderCode: createdOrder.orderCode,
+      totalAmount: createdOrder.totalAmount,
+      userId,
+    });
 
     return { order: createdOrder, items: orderItems };
   }
@@ -663,7 +670,11 @@ export class OrdersService {
         this.logger.warn('[OrdersService] AuditLog write failed', err),
       );
 
-    // TODO(T-13): emit socket `order:status-updated` to `user:{userId}` room
+    this.notificationsGateway?.emitToUser(userId, 'order:status-updated', {
+      orderId,
+      orderCode: updated.orderCode,
+      status: newStatus,
+    });
 
     return { order: updated, items };
   }

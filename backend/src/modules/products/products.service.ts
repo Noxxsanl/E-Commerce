@@ -5,6 +5,7 @@ import { InjectQueue } from '@nestjs/bullmq';
 import { Queue } from 'bullmq';
 import { Types } from 'mongoose';
 import { createHash } from 'crypto';
+import sanitizeHtml from 'sanitize-html';
 import type Redis from 'ioredis';
 import { InjectRedis } from '../../cache/redis.provider';
 import { ProductsRepository } from './products.repository';
@@ -281,6 +282,7 @@ export class ProductsService {
 
     const product = await this.productsRepository.create({
       ...dto,
+      description: dto.description ? sanitizeHtml(dto.description) : undefined,
       slug,
       categories: dto.categories.map((id) => new Types.ObjectId(id)),
       flashSaleEndAt: dto.flashSaleEndAt
@@ -370,6 +372,9 @@ export class ProductsService {
 
     const updateData: Record<string, unknown> = {
       ...dto,
+      ...(dto.description !== undefined && {
+        description: sanitizeHtml(dto.description),
+      }),
       ...(dto.categories && {
         categories: dto.categories.map((cid) => new Types.ObjectId(cid)),
       }),

@@ -35,6 +35,7 @@ import { OrdersModule } from './modules/orders/orders.module';
 import { ReviewsModule } from './modules/reviews/reviews.module';
 import { BannersModule } from './modules/banners/banners.module';
 import { NotificationsModule } from './modules/notifications/notifications.module';
+import { DashboardModule } from './modules/dashboard/dashboard.module';
 
 @Module({
   imports: [
@@ -91,6 +92,7 @@ import { NotificationsModule } from './modules/notifications/notifications.modul
     ReviewsModule,
     BannersModule,
     NotificationsModule,
+    DashboardModule,
   ],
   controllers: [AppController],
   providers: [
